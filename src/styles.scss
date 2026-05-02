@@ -1,0 +1,25 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+/* small helper resets */
+body {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f6f8fa;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+.success-snackbar {
+  background-color: #2e7d32; // green
+  color: #fff;
+  font-weight: 500;
+}
+
+.error-snackbar {
+  background-color: #d32f2f; // red
+  color: #fff;
+  font-weight: 500;
+}

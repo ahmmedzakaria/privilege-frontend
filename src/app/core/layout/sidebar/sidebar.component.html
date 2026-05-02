@@ -1,0 +1,44 @@
+<div class="sidebar">
+    <!-- Brand -->
+    <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-2">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fa fa-shield-halved text-primary fs-4"></i>
+            <span class="fw-bold fs-5" *ngIf="!collapsed">Privilege App</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <ul class="nav flex-column mt-3">
+        <li class="nav-item" *ngFor="let item of visibleItems">
+            <a
+                    class="nav-link d-flex align-items-center justify-content-between"
+                    [routerLink]="item.path || null"
+                    routerLinkActive="active"
+                    (click)="item.children ? toggleSubMenu(item.label) : null"
+            >
+                <div class="d-flex align-items-center">
+                    <i [class]="item.icon + ' me-2'"></i>
+                    <span *ngIf="!collapsed">{{ item.label }}</span>
+                </div>
+                <i
+                        *ngIf="item.children && !collapsed"
+                        class="fa fa-chevron-right"
+                        [@rotateArrow]="isExpanded(item.label) ? 'expanded' : 'collapsed'"
+                ></i>
+            </a>
+
+            <!-- Submenu with slide-down -->
+            <ul
+                    *ngIf="item.children && isExpanded(item.label)"
+                    class="submenu list-unstyled ps-4"
+                    [@slideToggle]
+            >
+                <li *ngFor="let child of item.children">
+                    <a class="nav-link" [routerLink]="child.path" routerLinkActive="active">
+                        <i class="fa fa-angle-right me-1"></i> {{ child.label }}
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

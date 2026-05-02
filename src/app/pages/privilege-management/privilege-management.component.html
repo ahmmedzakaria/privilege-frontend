@@ -1,0 +1,281 @@
+<div class="privilege-page">
+    <div class="page-header">
+        <div>
+            <div class="eyebrow">Auth Module</div>
+            <h3 class="mb-1">Privilege Management</h3>
+            <p class="text-muted mb-0">Manage module, menu, feature, and action access using fixed privilege codes.</p>
+        </div>
+        <div class="code-card">
+            <span>Current Code</span>
+            <strong>{{ generatedPrivilegeCode }}</strong>
+        </div>
+    </div>
+
+    <div class="workspace-grid">
+        <section class="panel">
+            <div class="panel-title">
+                <i class="fa fa-key"></i>
+                <span>Privilege Catalog</span>
+            </div>
+
+            <form [formGroup]="privilegeForm" (ngSubmit)="savePrivilege()" class="row g-3">
+                <div class="col-md-6">
+                    <app-smart-dropdown
+                            label="Module"
+                            mode="static"
+                            [searchable]="true"
+                            [options]="moduleOptions"
+                            formControlName="moduleCode">
+                    </app-smart-dropdown>
+                </div>
+
+                <div class="col-md-6">
+                    <app-smart-dropdown
+                            label="Menu Type"
+                            mode="static"
+                            [searchable]="true"
+                            [options]="featureTypeOptions"
+                            formControlName="featureTypeCode">
+                    </app-smart-dropdown>
+                </div>
+
+                <div class="col-md-5">
+                    <app-textbox
+                            formControlName="featureCode"
+                            label="Feature Code"
+                            icon="fa fa-hashtag"
+                            [onlyNumber]="true"
+                            [maxLength]="3"
+                            [floating]="true"
+                            (blur)="normalizeFeatureCode()">
+                    </app-textbox>
+                </div>
+
+                <div class="col-md-7">
+                    <app-textbox
+                            formControlName="featureName"
+                            label="Feature Name"
+                            icon="fa fa-cube"
+                            [floating]="true">
+                    </app-textbox>
+                </div>
+
+                <div class="col-md-6">
+                    <app-smart-dropdown
+                            label="Action"
+                            mode="static"
+                            [searchable]="true"
+                            [options]="actionOptions"
+                            formControlName="actionCode">
+                    </app-smart-dropdown>
+                </div>
+
+                <div class="col-md-6 d-flex align-items-end">
+                    <label class="status-toggle">
+                        <input type="checkbox" formControlName="active" />
+                        <span>Active privilege</span>
+                    </label>
+                </div>
+
+                <div class="col-12">
+                    <div class="code-breakdown">
+                        <span>{{ privilegeForm.value.moduleCode || '--' }} Module</span>
+                        <span>{{ privilegeForm.value.featureTypeCode || '--' }} Type</span>
+                        <span>{{ privilegeForm.value.featureCode || '---' }} Feature</span>
+                        <span>{{ privilegeForm.value.actionCode || '--' }} Action</span>
+                    </div>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end gap-2">
+                    <app-button
+                            label="Refresh"
+                            icon="fa fa-rotate"
+                            variant="secondary"
+                            [outline]="true"
+                            (clicked)="loadPrivileges()">
+                    </app-button>
+                    <app-button
+                            label="Save Privilege"
+                            icon="fa fa-floppy-disk"
+                            variant="primary"
+                            type="submit"
+                            [disabled]="privilegeForm.invalid">
+                    </app-button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel">
+            <div class="panel-title">
+                <i class="fa fa-user-lock"></i>
+                <span>Assign Access</span>
+            </div>
+
+            <form [formGroup]="assignmentForm" (ngSubmit)="assignPrivileges()" class="row g-3">
+                <div class="col-md-5">
+                    <app-smart-dropdown
+                            label="Assign To"
+                            mode="static"
+                            [searchable]="false"
+                            [options]="assignmentTargetOptions"
+                            formControlName="targetType">
+                    </app-smart-dropdown>
+                </div>
+
+                <div class="col-md-7">
+                    <app-textbox
+                            formControlName="targetId"
+                            label="Role/User ID"
+                            icon="fa fa-id-badge"
+                            type="number"
+                            [onlyNumber]="true"
+                            [floating]="true">
+                    </app-textbox>
+                </div>
+
+                <div class="col-12">
+                    <div class="selection-box">
+                        <div>
+                            <strong>{{ selectedCodes.size }}</strong>
+                            <span class="text-muted">privilege codes selected</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="selectAllFiltered()">
+                                <i class="fa fa-check-double me-1"></i>Select Visible
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="clearSelection()">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end">
+                    <app-button
+                            label="Assign Selected"
+                            icon="fa fa-user-check"
+                            variant="success"
+                            type="submit"
+                            [disabled]="assignmentForm.invalid || selectedCodes.size === 0">
+                    </app-button>
+                </div>
+            </form>
+
+            <div class="divider"></div>
+
+            <div class="panel-title small-title">
+                <i class="fa fa-shield-halved"></i>
+                <span>Check Access</span>
+            </div>
+
+            <form [formGroup]="checkForm" (ngSubmit)="checkPrivilege()" class="row g-3">
+                <div class="col-md-6">
+                    <app-textbox
+                            formControlName="username"
+                            label="Username"
+                            icon="fa fa-user"
+                            [floating]="true">
+                    </app-textbox>
+                </div>
+                <div class="col-md-6">
+                    <app-textbox
+                            formControlName="privilegeCode"
+                            label="Privilege Code"
+                            icon="fa fa-key"
+                            [maxLength]="9"
+                            [floating]="true">
+                    </app-textbox>
+                </div>
+
+                <div class="col-12">
+                    <div class="check-preview">
+                        <span>Resolved code</span>
+                        <strong>{{ checkPrivilegeCodePreview || '---------' }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-12 d-flex align-items-center justify-content-between">
+                    <div *ngIf="checkResult" class="access-result" [class.allowed]="checkResult.allowed">
+                        <i [class]="checkResult.allowed ? 'fa fa-circle-check' : 'fa fa-circle-xmark'"></i>
+                        {{ checkResult.privilegeCode }}:
+                        {{ checkResult.allowed ? 'Allowed' : 'Not Allowed' }}
+                    </div>
+                    <app-button
+                            label="Check"
+                            icon="fa fa-magnifying-glass"
+                            variant="dark"
+                            type="submit"
+                            [disabled]="checkForm.invalid">
+                    </app-button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <section class="panel mt-4">
+        <div class="list-header">
+            <div class="panel-title mb-0">
+                <i class="fa fa-list-check"></i>
+                <span>Privilege List</span>
+            </div>
+            <div class="search-control">
+                <i class="fa fa-search"></i>
+                <input
+                        type="search"
+                        class="form-control"
+                        placeholder="Search code, module, feature, or action"
+                        [(ngModel)]="searchText"
+                        [ngModelOptions]="{ standalone: true }" />
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle privilege-table">
+                <thead>
+                <tr>
+                    <th style="width: 42px;"></th>
+                    <th>Privilege Code</th>
+                    <th>Module</th>
+                    <th>Menu Type</th>
+                    <th>Feature</th>
+                    <th>Action</th>
+                    <th>Status</th>
+                    <th class="text-end">Tools</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngIf="loading">
+                    <td colspan="8" class="text-center text-muted py-4">Loading privileges...</td>
+                </tr>
+                <tr *ngFor="let privilege of filteredPrivileges">
+                    <td>
+                        <input
+                                type="checkbox"
+                                class="form-check-input"
+                                [checked]="selectedCodes.has(privilege.privilegeCode)"
+                                (change)="togglePrivilegeSelection(privilege.privilegeCode, $any($event.target).checked)" />
+                    </td>
+                    <td><span class="code-pill">{{ privilege.privilegeCode }}</span></td>
+                    <td>{{ privilege.moduleName }} <small class="text-muted">({{ privilege.moduleCode }})</small></td>
+                    <td>{{ privilege.featureTypeName }} <small class="text-muted">({{ privilege.featureTypeCode }})</small></td>
+                    <td>{{ privilege.featureName }} <small class="text-muted">({{ privilege.featureCode }})</small></td>
+                    <td>{{ privilege.actionName }} <small class="text-muted">({{ privilege.actionCode }})</small></td>
+                    <td>
+                        <span class="badge" [class.text-bg-success]="privilege.active" [class.text-bg-secondary]="!privilege.active">
+                            {{ privilege.active ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="editPrivilege(privilege)">
+                            <i class="fa fa-pen me-1"></i>Edit
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="!loading && filteredPrivileges.length === 0">
+                    <td colspan="8" class="text-center text-muted py-4">No privileges found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
