@@ -25,6 +25,7 @@ export const ApiEndpoints: { [key: string]: ApiEndpoint } = {
     PRIVILEGE_DEFINITIONS: { service: 'AUTH', apiPath: 'auth/privilege/definitions', actionType: ActionTypes.AUTH },
     PRIVILEGE_CHECK: { service: 'AUTH', apiPath: 'auth/privilege/check', actionType: ActionTypes.AUTH },
     PRIVILEGE_MY_CODES: { service: 'AUTH', apiPath: 'auth/privilege/my-codes', actionType: ActionTypes.AUTH },
+    PRIVILEGE_SIDEBAR_MENU: { service: 'AUTH', apiPath: 'auth/privilege/sidebar-menu', actionType: ActionTypes.AUTH },
     PRIVILEGE_ASSIGN_ROLE: { service: 'AUTH', apiPath: 'auth/privilege/assign-role', actionType: ActionTypes.AUTH },
     PRIVILEGE_ASSIGN_USER: { service: 'AUTH', apiPath: 'auth/privilege/assign-user', actionType: ActionTypes.AUTH },
 
