@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Privilege, PrivilegeFeatureDefinition, PrivilegeService } from '../../core/services/privilege.service';
+import { Privilege, PrivilegeFeatureDefinition, PrivilegeService, SubMenu } from '../../core/services/privilege.service';
 import { TextboxComponent } from '../../shared/components/textbox/textbox.component';
 import { SmartDropdownComponent } from '../../shared/components/smart-dropdown/smart-dropdown.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -15,10 +15,12 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 })
 export class PrivilegeManagementComponent implements OnInit {
     privilegeForm: FormGroup;
+    menuForm: FormGroup;
     assignmentForm: FormGroup;
     checkForm: FormGroup;
 
     privileges: Privilege[] = [];
+    subMenus: SubMenu[] = [];
     definitions: PrivilegeFeatureDefinition[] = [];
     selectedCodes = new Set<string>();
     searchText = '';
@@ -64,6 +66,19 @@ export class PrivilegeManagementComponent implements OnInit {
             featureCode: ['001', [Validators.required, Validators.pattern(/^\d{3}$/)]],
             featureName: ['Person', Validators.required],
             actionCode: ['01', Validators.required],
+            subMenuId: [null],
+            active: [true],
+        });
+
+        this.menuForm = this.formBuilder.group({
+            id: [null],
+            name: ['Person', Validators.required],
+            url: ['/person', Validators.required],
+            icon: ['fa fa-users'],
+            moduleCode: ['01', Validators.required],
+            featureTypeCode: ['02', Validators.required],
+            featureCode: ['001', [Validators.required, Validators.pattern(/^\d{3}$/)]],
+            featureName: ['Person', Validators.required],
             active: [true],
         });
 
@@ -84,6 +99,7 @@ export class PrivilegeManagementComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadDefinitions();
+        this.loadSubMenus();
         this.loadPrivileges();
     }
 
@@ -113,6 +129,15 @@ export class PrivilegeManagementComponent implements OnInit {
         );
     }
 
+    get subMenuOptions(): { label: string; value: number }[] {
+        return this.subMenus
+            .filter(menu => !!menu.id)
+            .map(menu => ({
+                label: `${menu.name} (${menu.url})`,
+                value: menu.id as number,
+            }));
+    }
+
     loadPrivileges(): void {
         this.loading = true;
         this.privilegeService.listPrivileges().subscribe({
@@ -139,6 +164,47 @@ export class PrivilegeManagementComponent implements OnInit {
         });
     }
 
+    loadSubMenus(): void {
+        this.privilegeService.listSubMenus().subscribe({
+            next: subMenus => {
+                this.subMenus = subMenus || [];
+            },
+            error: () => {
+                this.subMenus = [];
+            }
+        });
+    }
+
+    saveSubMenu(): void {
+        if (this.menuForm.invalid) {
+            this.menuForm.markAllAsTouched();
+            return;
+        }
+
+        const formValue = this.menuForm.value;
+        const moduleOption = this.moduleOptions.find(option => option.value === formValue.moduleCode);
+        const featureTypeOption = this.featureTypeOptions.find(option => option.value === formValue.featureTypeCode);
+
+        this.privilegeService.saveSubMenu({
+            id: formValue.id,
+            name: formValue.name,
+            url: formValue.url,
+            icon: formValue.icon,
+            moduleCode: formValue.moduleCode,
+            moduleName: moduleOption?.label || formValue.moduleCode,
+            featureTypeCode: formValue.featureTypeCode,
+            featureTypeName: featureTypeOption?.label || formValue.featureTypeCode,
+            featureCode: formValue.featureCode,
+            featureName: formValue.featureName,
+            active: !!formValue.active,
+        }).subscribe({
+            next: menu => {
+                this.menuForm.patchValue({ id: menu.id });
+                this.loadSubMenus();
+            },
+        });
+    }
+
     savePrivilege(): void {
         if (this.privilegeForm.invalid) {
             this.privilegeForm.markAllAsTouched();
@@ -159,6 +225,7 @@ export class PrivilegeManagementComponent implements OnInit {
             featureName: formValue.featureName,
             actionCode: formValue.actionCode,
             actionName: actionOption?.label || formValue.actionCode,
+            subMenuId: formValue.subMenuId || null,
             active: !!formValue.active,
         }).subscribe({
             next: () => this.loadPrivileges(),
@@ -172,8 +239,13 @@ export class PrivilegeManagementComponent implements OnInit {
             featureCode: privilege.featureCode,
             featureName: privilege.featureName,
             actionCode: privilege.actionCode,
+            subMenuId: privilege.subMenuId || null,
             active: privilege.active,
         });
+    }
+
+    editSubMenu(menu: SubMenu): void {
+        this.menuForm.patchValue(menu);
     }
 
     togglePrivilegeSelection(privilegeCode: string, checked: boolean): void {
@@ -285,6 +357,14 @@ export class PrivilegeManagementComponent implements OnInit {
             featureCode: firstDefinition.featureCode,
             featureName: firstDefinition.featureName,
             actionCode: firstAction?.actionCode || this.privilegeForm.value.actionCode,
+        });
+        this.menuForm.patchValue({
+            name: firstDefinition.menuLabel || firstDefinition.featureName,
+            moduleCode: firstDefinition.moduleCode,
+            featureTypeCode: firstDefinition.featureTypeCode,
+            featureCode: firstDefinition.featureCode,
+            featureName: firstDefinition.featureName,
+            icon: firstDefinition.icon || this.menuForm.value.icon,
         });
     }
 

@@ -11,6 +11,111 @@
         </div>
     </div>
 
+    <section class="panel mb-4">
+        <div class="panel-title">
+            <i class="fa fa-diagram-project"></i>
+            <span>Menu Catalog</span>
+        </div>
+
+        <form [formGroup]="menuForm" (ngSubmit)="saveSubMenu()" class="row g-3">
+            <div class="col-md-3">
+                <app-textbox
+                        formControlName="name"
+                        label="Sub Menu Name"
+                        icon="fa fa-tag"
+                        [floating]="true">
+                </app-textbox>
+            </div>
+
+            <div class="col-md-3">
+                <app-textbox
+                        formControlName="url"
+                        label="URL"
+                        icon="fa fa-link"
+                        [floating]="true">
+                </app-textbox>
+            </div>
+
+            <div class="col-md-2">
+                <app-textbox
+                        formControlName="icon"
+                        label="Icon"
+                        icon="fa fa-icons"
+                        [floating]="true">
+                </app-textbox>
+            </div>
+
+            <div class="col-md-2">
+                <app-smart-dropdown
+                        label="Module"
+                        mode="static"
+                        [searchable]="true"
+                        [options]="moduleOptions"
+                        formControlName="moduleCode">
+                </app-smart-dropdown>
+            </div>
+
+            <div class="col-md-2">
+                <app-smart-dropdown
+                        label="Menu Type"
+                        mode="static"
+                        [searchable]="true"
+                        [options]="featureTypeOptions"
+                        formControlName="featureTypeCode">
+                </app-smart-dropdown>
+            </div>
+
+            <div class="col-md-2">
+                <app-textbox
+                        formControlName="featureCode"
+                        label="Feature Code"
+                        icon="fa fa-hashtag"
+                        [onlyNumber]="true"
+                        [maxLength]="3"
+                        [floating]="true">
+                </app-textbox>
+            </div>
+
+            <div class="col-md-4">
+                <app-textbox
+                        formControlName="featureName"
+                        label="Feature Name"
+                        icon="fa fa-cube"
+                        [floating]="true">
+                </app-textbox>
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end">
+                <label class="status-toggle">
+                    <input type="checkbox" formControlName="active" />
+                    <span>Active menu</span>
+                </label>
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end justify-content-end">
+                <app-button
+                        label="Save Menu"
+                        icon="fa fa-floppy-disk"
+                        variant="primary"
+                        type="submit"
+                        [disabled]="menuForm.invalid">
+                </app-button>
+            </div>
+        </form>
+
+        <div class="menu-chip-list mt-3">
+            <button
+                    type="button"
+                    class="menu-chip"
+                    *ngFor="let menu of subMenus"
+                    (click)="editSubMenu(menu)">
+                <i [class]="menu.icon || 'fa fa-link'"></i>
+                <span>{{ menu.name }}</span>
+                <small>{{ menu.url }}</small>
+            </button>
+        </div>
+    </section>
+
     <div class="workspace-grid">
         <section class="panel">
             <div class="panel-title">
@@ -67,6 +172,16 @@
                             [searchable]="true"
                             [options]="actionOptions"
                             formControlName="actionCode">
+                    </app-smart-dropdown>
+                </div>
+
+                <div class="col-md-6">
+                    <app-smart-dropdown
+                            label="Sub Menu"
+                            mode="static"
+                            [searchable]="true"
+                            [options]="subMenuOptions"
+                            formControlName="subMenuId">
                     </app-smart-dropdown>
                 </div>
 
@@ -238,6 +353,7 @@
                     <th>Module</th>
                     <th>Menu Type</th>
                     <th>Feature</th>
+                    <th>Sub Menu</th>
                     <th>Action</th>
                     <th>Status</th>
                     <th class="text-end">Tools</th>
@@ -245,7 +361,7 @@
                 </thead>
                 <tbody>
                 <tr *ngIf="loading">
-                    <td colspan="8" class="text-center text-muted py-4">Loading privileges...</td>
+                    <td colspan="9" class="text-center text-muted py-4">Loading privileges...</td>
                 </tr>
                 <tr *ngFor="let privilege of filteredPrivileges">
                     <td>
@@ -259,6 +375,10 @@
                     <td>{{ privilege.moduleName }} <small class="text-muted">({{ privilege.moduleCode }})</small></td>
                     <td>{{ privilege.featureTypeName }} <small class="text-muted">({{ privilege.featureTypeCode }})</small></td>
                     <td>{{ privilege.featureName }} <small class="text-muted">({{ privilege.featureCode }})</small></td>
+                    <td>
+                        {{ privilege.subMenuName || '-' }}
+                        <small class="text-muted" *ngIf="privilege.subMenuUrl">({{ privilege.subMenuUrl }})</small>
+                    </td>
                     <td>{{ privilege.actionName }} <small class="text-muted">({{ privilege.actionCode }})</small></td>
                     <td>
                         <span class="badge" [class.text-bg-success]="privilege.active" [class.text-bg-secondary]="!privilege.active">
@@ -272,7 +392,7 @@
                     </td>
                 </tr>
                 <tr *ngIf="!loading && filteredPrivileges.length === 0">
-                    <td colspan="8" class="text-center text-muted py-4">No privileges found.</td>
+                    <td colspan="9" class="text-center text-muted py-4">No privileges found.</td>
                 </tr>
                 </tbody>
             </table>

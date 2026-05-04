@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, BehaviorSubject } from 'rxjs';
+import { tap, BehaviorSubject, switchMap } from 'rxjs';
 import {ApiService} from "../../api/api.service";
 import {AuthResponse} from "../../api/model/auth-response";
 import {ApiEndpoints} from "../../api/api-endpoints";
 import {jwtDecode} from "jwt-decode";
 import {LayoutService} from "../layout.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {SidebarMenuService} from "../sidebar-menu.service";
 
 
 
@@ -26,6 +27,7 @@ export class AuthService {
     constructor(private http: HttpClient,
                 private apiService: ApiService,
                 private layoutService: LayoutService,
+                private sidebarMenuService: SidebarMenuService,
                 private router: Router,
     ) {
         const token = this.getToken();
@@ -46,10 +48,10 @@ export class AuthService {
                     if (res?.accessToken) {
                         localStorage.setItem('token', res.accessToken);
                         localStorage.setItem('refreshToken', res.refreshToken || '');
-                        localStorage.setItem('privilegeCodes', JSON.stringify(res.privilegeCodes || []));
                         this.decodeAndSetUser(res.accessToken);
                     }
-                })
+                }),
+                switchMap(() => this.sidebarMenuService.loadApplicationContext())
             );
     }
 
@@ -57,6 +59,7 @@ export class AuthService {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('privilegeCodes');
+        localStorage.removeItem('sidebarMenus');
         this.clearLogoutTimer();
         this.currentUserSubject.next(null);
         this.layoutService.setPublicLayout();

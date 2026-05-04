@@ -107,6 +107,27 @@
   padding: 0.75rem;
 }
 
+.menu-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.menu-chip {
+  border: 1px solid #dbe3ef;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #1f2937;
+  padding: 0.45rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.menu-chip small {
+  color: #64748b;
+}
+
 .divider {
   height: 1px;
   background: #e5e7eb;

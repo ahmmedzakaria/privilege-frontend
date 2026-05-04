@@ -1,6 +1,6 @@
 import {
     Component, ElementRef, EventEmitter, forwardRef, HostListener,
-    Input, OnInit, Output, ViewChild
+    Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild
 } from '@angular/core';
 import {
     ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
@@ -31,7 +31,7 @@ type DropdownMode = 'static' | 'api-simple' | 'api-scroll';
         }
     ]
 })
-export class SmartDropdownComponent implements OnInit, ControlValueAccessor, Validator {
+export class SmartDropdownComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
     /** Inputs */
     @Input() label = '';
     @Input() placeholder = 'Select...';
@@ -77,6 +77,13 @@ export class SmartDropdownComponent implements OnInit, ControlValueAccessor, Val
         } else {
             this.setupSearch();
             this.loadData();
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (this.mode === 'static' && changes['options']) {
+            this.filteredOptions = [...this.options];
+            this.updateSelectedLabel();
         }
     }
 
