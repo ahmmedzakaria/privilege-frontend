@@ -7,7 +7,17 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist/out-tsc"
+    "outDir": "./dist/out-tsc",
+    "baseUrl": ".",
+    "paths": {
+      "@app-core/*": ["src/app/core/*"],
+      "@kyc/shared": ["../frontend-libs/shared/src/public-api.ts"],
+      "@kyc/shared/*": ["../frontend-libs/shared/src/lib/*"],
+      "@kyc/layout": ["../frontend-libs/layout/src/public-api.ts"],
+      "@kyc/layout/*": ["../frontend-libs/layout/src/lib/*"],
+      "@kyc/auth": ["../frontend-libs/auth/src/public-api.ts"],
+      "@kyc/auth/*": ["../frontend-libs/auth/src/lib/*"]
+    }
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

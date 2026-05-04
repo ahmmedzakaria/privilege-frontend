@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/services/auth/auth.guard';
-import { loginGuard } from './core/services/auth/login.guard';
+import { authGuard } from '@kyc/auth';
+import { loginGuard } from '@kyc/auth';
 
 export const routes: Routes = [
     {
         path: 'login',
         loadComponent: () =>
-            import('./pages/login/login.component').then(m => m.LoginComponent),
+            import('@kyc/auth').then(m => m.LoginComponent),
         canActivate: [loginGuard],
     },
     {
         path: '',
         loadComponent: () =>
-            import('./core/layout/layout/layout.component').then(m => m.LayoutComponent),
+            import('@kyc/layout').then(m => m.LayoutComponent),
         canActivate: [authGuard],
         children: [
             {

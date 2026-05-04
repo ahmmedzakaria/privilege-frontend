@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {LayoutService} from "./core/services/layout.service";
-import {AuthService} from "./core/services/auth/auth.service";
+import {LayoutService} from '@kyc/layout';
+import {AuthService} from '@kyc/auth';
 
 @Component({
     selector: 'app-root',

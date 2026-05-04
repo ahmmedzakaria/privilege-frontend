@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {AuthService} from "./auth/auth.service";
 import {ApiService} from "../api/api.service";
 import {ApiEndpoints} from "../api/api-endpoints";
 
@@ -16,8 +15,7 @@ export interface Kyc {
 @Injectable({providedIn: 'root'})
 export class KycService {
 
-    constructor(private authService: AuthService,
-                private apiService: ApiService) {}
+    constructor(private apiService: ApiService) {}
 
     createKyc(data: any): Observable<Kyc> {
         return this.apiService.post<Kyc>(ApiEndpoints.KYC_CREATE, data);

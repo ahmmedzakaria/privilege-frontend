@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import {AuthService} from "../services/auth/auth.service";
 import {ActionTypes} from "./api-endpoints";
 import {Environment} from "./environment";
 import {ApiEndpoint} from "./model/endpoint";
