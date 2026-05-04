@@ -14,6 +14,9 @@ export interface Privilege {
     featureName: string;
     actionCode: string;
     actionName: string;
+    subMenuId?: number | null;
+    subMenuName?: string | null;
+    subMenuUrl?: string | null;
     active: boolean;
 }
 
@@ -26,7 +29,24 @@ export interface PrivilegeRequest {
     featureName: string;
     actionCode: string;
     actionName: string;
+    subMenuId?: number | null;
     active: boolean;
+}
+
+export interface SubMenu {
+    id?: number;
+    name: string;
+    url: string;
+    icon?: string;
+    moduleCode: string;
+    moduleName: string;
+    featureTypeCode: string;
+    featureTypeName: string;
+    featureCode: string;
+    featureName: string;
+    active: boolean;
+    createdBy?: number | null;
+    updatedBy?: number | null;
 }
 
 export interface PrivilegeAssignmentRequest {
@@ -82,6 +102,14 @@ export class PrivilegeService {
 
     listDefinitions(): Observable<PrivilegeFeatureDefinition[]> {
         return this.apiService.post<PrivilegeFeatureDefinition[]>(ApiEndpoints.PRIVILEGE_DEFINITIONS, {});
+    }
+
+    saveSubMenu(request: SubMenu): Observable<SubMenu> {
+        return this.apiService.post<SubMenu>(ApiEndpoints.SUB_MENU_SAVE, request);
+    }
+
+    listSubMenus(): Observable<SubMenu[]> {
+        return this.apiService.post<SubMenu[]>(ApiEndpoints.SUB_MENU_LIST, {});
     }
 
     checkPrivilege(request: PrivilegeCheckRequest): Observable<PrivilegeCheckResponse> {
