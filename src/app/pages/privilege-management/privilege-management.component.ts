@@ -6,6 +6,8 @@ import { TextboxComponent } from '@kyc/shared/components/textbox/textbox.compone
 import { SmartDropdownComponent } from '@kyc/shared/components/smart-dropdown/smart-dropdown.component';
 import { ButtonComponent } from '@kyc/shared/components/button/button.component';
 
+type PrivilegeSection = 'menus' | 'privileges' | 'assignment' | 'accessCheck' | 'list';
+
 @Component({
     selector: 'app-privilege-management',
     standalone: true,
@@ -26,6 +28,7 @@ export class PrivilegeManagementComponent implements OnInit {
     searchText = '';
     loading = false;
     checkResult: { privilegeCode: string; allowed: boolean } | null = null;
+    activeSection: PrivilegeSection = 'privileges';
 
     moduleOptions = [
         { label: 'KYC', value: '01' },
@@ -110,6 +113,14 @@ export class PrivilegeManagementComponent implements OnInit {
     get checkPrivilegeCodePreview(): string {
         const privilegeCode = this.checkForm.value.privilegeCode;
         return privilegeCode || this.buildPrivilegeCode(this.checkForm.value);
+    }
+
+    get activePrivilegeCount(): number {
+        return this.privileges.filter(privilege => privilege.active).length;
+    }
+
+    get inactivePrivilegeCount(): number {
+        return this.privileges.length - this.activePrivilegeCount;
     }
 
     get filteredPrivileges(): Privilege[] {
@@ -262,6 +273,10 @@ export class PrivilegeManagementComponent implements OnInit {
 
     clearSelection(): void {
         this.selectedCodes.clear();
+    }
+
+    setActiveSection(section: PrivilegeSection): void {
+        this.activeSection = section;
     }
 
     assignPrivileges(): void {
