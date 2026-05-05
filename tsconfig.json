@@ -16,7 +16,9 @@
       "@kyc/layout": ["../frontend-libs/layout/src/public-api.ts"],
       "@kyc/layout/*": ["../frontend-libs/layout/src/lib/*"],
       "@kyc/auth": ["../frontend-libs/auth/src/public-api.ts"],
-      "@kyc/auth/*": ["../frontend-libs/auth/src/lib/*"]
+      "@kyc/auth/*": ["../frontend-libs/auth/src/lib/*"],
+      "@kyc/api-common": ["../frontend-libs/api-common/src/public-api.ts"],
+      "@kyc/api-common/*": ["../frontend-libs/api-common/src/lib/*"]
     }
   },
   "angularCompilerOptions": {

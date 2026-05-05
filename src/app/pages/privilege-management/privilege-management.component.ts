@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Privilege, PrivilegeFeatureDefinition, PrivilegeService, SubMenu } from '../../core/services/privilege.service';
-import { TextboxComponent } from '@kyc/shared';
-import { SmartDropdownComponent } from '@kyc/shared';
-import { ButtonComponent } from '@kyc/shared';
+import { TextboxComponent } from '@kyc/shared/components/textbox/textbox.component';
+import { SmartDropdownComponent } from '@kyc/shared/components/smart-dropdown/smart-dropdown.component';
+import { ButtonComponent } from '@kyc/shared/components/button/button.component';
 
 @Component({
     selector: 'app-privilege-management',
