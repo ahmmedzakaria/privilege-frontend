@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService } from '@kyc/api-common';
+import { ApiService } from '@nexacore/api-common';
 import { ApiEndpoints } from '../api/api-endpoints';
 
 export interface Privilege {

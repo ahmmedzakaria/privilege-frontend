@@ -1,1 +1,1 @@
-# privilege-frontend
+# NexaCore Privilege Frontend

@@ -1,4 +1,4 @@
-import {ActionTypes, ApiEndpoint} from "@kyc/api-common";
+import {ActionTypes, ApiEndpoint} from "@nexacore/api-common";
 
 export const ApiEndpoints: { [key: string]: ApiEndpoint } = {
     KYC_LOGIN: { service: 'LOGIN', apiPath: 'auth/authenticate', actionType: ActionTypes.LOGIN },

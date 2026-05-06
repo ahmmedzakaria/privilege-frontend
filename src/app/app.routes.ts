@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '@kyc/auth';
-import { loginGuard } from '@kyc/auth';
+import { authGuard } from '@nexacore/auth';
+import { loginGuard } from '@nexacore/auth';
 
 export const routes: Routes = [
     {
         path: 'login',
         loadComponent: () =>
-            import('@kyc/auth').then(m => m.LoginComponent),
+            import('@nexacore/auth').then(m => m.LoginComponent),
         canActivate: [loginGuard],
     },
     {
         path: '',
         loadComponent: () =>
-            import('@kyc/layout').then(m => m.LayoutComponent),
+            import('@nexacore/layout').then(m => m.LayoutComponent),
         canActivate: [authGuard],
         children: [
             {
