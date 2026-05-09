@@ -1,19 +1,8 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '@nexacore/auth';
-import { loginGuard } from '@nexacore/auth';
+import { AUTH_ROUTES, authGuard } from '@nexacore/auth';
 
 export const routes: Routes = [
-    {
-        path: 'login',
-        loadComponent: () =>
-            import('@nexacore/auth').then(m => m.LoginComponent),
-        canActivate: [loginGuard],
-    },
-    {
-        path: 'auth/callback',
-        loadComponent: () =>
-            import('@nexacore/auth').then(m => m.SsoCallbackComponent),
-    },
+    ...AUTH_ROUTES,
     {
         path: '',
         loadComponent: () =>
