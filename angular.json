@@ -25,10 +25,21 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "i18nMissingTranslation": "warning",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "../frontend-libs/shared/src/lib/i18n/translations",
+                "output": "/assets/i18n/common"
               },
               {
                 "glob": "**/*",
@@ -53,7 +64,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "1.2MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -103,6 +114,16 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "../frontend-libs/shared/src/lib/i18n/translations",
+                "output": "/assets/i18n/common"
               },
               {
                 "glob": "**/*",
